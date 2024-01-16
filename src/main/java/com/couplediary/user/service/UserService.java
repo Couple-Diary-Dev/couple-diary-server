@@ -3,6 +3,7 @@ package com.couplediary.user.service;
 import com.couplediary.user.domain.User;
 import com.couplediary.user.dto.CreateUserRequest;
 import com.couplediary.user.dto.CreateUserResponse;
+import com.couplediary.user.dto.GetUserResponse;
 import com.couplediary.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,8 @@ public class UserService {
     public CreateUserResponse createUser(CreateUserRequest request) {
         // TODO : 이 이메일이 진짜 이 사람의 이메일인지 체크
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            // TODO : 추후 예외처리 해야함
+
+            // TODO : 추후 예외처리 공통적으로 해야함 (ControllerAdvice)
             throw new IllegalArgumentException("이메일 중복");
         }
 
@@ -27,5 +29,11 @@ public class UserService {
                 .passwordHash(request.getPassword()).build();
 
         return new CreateUserResponse(userRepository.save(user).getNickname());
+    }
+
+    public GetUserResponse getUser(Long id) {
+        // TODO : 추후 예외처리 공통적으로 해야함 (ControllerAdvice)
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+        return new GetUserResponse(user.getEmail(), user.getNickname());
     }
 }
