@@ -13,7 +13,12 @@ public class UserService {
     private final UserRepository userRepository;
 
     public CreateUserResponse createUser(CreateUserRequest request) {
-        // TODO: findByEmail해서 같은 이메일을 쓰거나 닉네임을 쓰는경우 예외던지기
+        // TODO : 이 이메일이 진짜 이 사람의 이메일인지 체크
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            // TODO : 추후 예외처리 해야함
+            throw new IllegalArgumentException("이메일 중복");
+        }
+
         // TODO : Password를 그냥 저장하지 않고, passwordHash로 저장하도록 변경
         User user = User.builder()
                 .nickname(request.getNickname())
