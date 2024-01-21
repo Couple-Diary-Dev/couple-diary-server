@@ -29,4 +29,16 @@ public class User {
     public enum Sex {
         MALE, FEMALE
     }
+
+    public void updateNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void updatePassword(String passwordHash) {
+        this.passwordHash = passwordHash;
+    }
+
+    public void updateSex(Sex sex) {
+        this.sex = sex;
+    }
 }

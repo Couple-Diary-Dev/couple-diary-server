@@ -3,6 +3,7 @@ package com.couplediary.user.controller;
 import com.couplediary.user.dto.CreateUserRequest;
 import com.couplediary.user.dto.CreateUserResponse;
 import com.couplediary.user.dto.GetUserResponse;
+import com.couplediary.user.dto.UpdateUserRequest;
 import com.couplediary.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -21,5 +22,15 @@ public class UserController {
     @GetMapping("/{id}")
     public GetUserResponse getUser(@PathVariable("id") Long id) {
         return userService.getUser(id);
+    }
+
+    @PutMapping("/update/{id}")
+    public void updateUser(@PathVariable("id") Long id, @RequestBody UpdateUserRequest updateUserRequest) {
+        userService.updateUser(id, updateUserRequest);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteUser(@PathVariable("id") Long id) {
+        userService.deleteUser(id);
     }
 }
