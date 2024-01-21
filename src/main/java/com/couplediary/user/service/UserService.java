@@ -46,7 +46,6 @@ public class UserService {
         if (nickname != null) {
             user.updateNickname(nickname);
         }
-        
         String password = updateUserRequest.getPassword();
         if (password != null) {
             user.updatePassword(updateUserRequest.getPassword());
@@ -55,5 +54,10 @@ public class UserService {
         if (sex != null) {
             user.updateSex(sex);
         }
+    }
+
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+        userRepository.delete(user);
     }
 }
