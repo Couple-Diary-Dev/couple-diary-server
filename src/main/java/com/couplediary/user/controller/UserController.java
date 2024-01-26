@@ -6,6 +6,8 @@ import com.couplediary.user.dto.GetUserResponse;
 import com.couplediary.user.dto.UpdateUserRequest;
 import com.couplediary.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,13 +17,13 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/create")
-    public CreateUserResponse createUser(@RequestBody CreateUserRequest createUserRequest) {
-        return userService.createUser(createUserRequest);
+    public ResponseEntity<CreateUserResponse> createUser(@RequestBody CreateUserRequest createUserRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(createUserRequest));
     }
 
     @GetMapping("/{id}")
-    public GetUserResponse getUser(@PathVariable("id") Long id) {
-        return userService.getUser(id);
+    public ResponseEntity<GetUserResponse> getUser(@PathVariable("id") Long id) {
+        return ResponseEntity.ok().body(userService.getUser(id));
     }
 
     @PutMapping("/update/{id}")
