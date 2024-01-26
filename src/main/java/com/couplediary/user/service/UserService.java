@@ -1,5 +1,6 @@
 package com.couplediary.user.service;
 
+import com.couplediary.Exception.CustomException;
 import com.couplediary.user.domain.User;
 import com.couplediary.user.dto.CreateUserRequest;
 import com.couplediary.user.dto.CreateUserResponse;
@@ -7,6 +8,7 @@ import com.couplediary.user.dto.GetUserResponse;
 import com.couplediary.user.dto.UpdateUserRequest;
 import com.couplediary.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +23,10 @@ public class UserService {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
 
             // TODO : 추후 예외처리 공통적으로 해야함 (ControllerAdvice)
-            throw new IllegalArgumentException("이메일 중복");
+            throw CustomException.builder()
+                    .message("이미 존재하는 유저입니다.")
+                    .status(HttpStatus.BAD_REQUEST)
+                    .build();
         }
 
         // TODO : Password를 그냥 저장하지 않고, passwordHash로 저장하도록 변경
@@ -36,12 +41,20 @@ public class UserService {
 
     public GetUserResponse getUser(Long id) {
         // TODO : 추후 예외처리 공통적으로 해야함 (ControllerAdvice)
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+        User user = userRepository.findById(id).orElseThrow(() ->
+                CustomException.builder()
+                        .message("해당 회원이 존재하지 않습니다.")
+                        .status(HttpStatus.BAD_REQUEST)
+                        .build());
         return new GetUserResponse(user.getEmail(), user.getNickname());
     }
 
     public void updateUser(Long id, UpdateUserRequest updateUserRequest) {
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+        User user = userRepository.findById(id).orElseThrow(() ->
+                CustomException.builder()
+                        .message("해당 회원이 존재하지 않습니다.")
+                        .status(HttpStatus.BAD_REQUEST)
+                        .build());
         String nickname = updateUserRequest.getNickname();
         if (nickname != null) {
             user.updateNickname(nickname);
@@ -57,7 +70,11 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException());
+        User user = userRepository.findById(id).orElseThrow(() ->
+                CustomException.builder()
+                        .message("해당 회원이 존재하지 않습니다.")
+                        .status(HttpStatus.BAD_REQUEST)
+                        .build());
         userRepository.delete(user);
     }
 }
