@@ -1,6 +1,6 @@
 package com.couplediary.user.service;
 
-import com.couplediary.Exception.CustomException;
+import com.couplediary.exception.CustomException;
 import com.couplediary.user.domain.User;
 import com.couplediary.user.dto.CreateUserRequest;
 import com.couplediary.user.dto.CreateUserResponse;
@@ -9,6 +9,7 @@ import com.couplediary.user.dto.UpdateUserRequest;
 import com.couplediary.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public CreateUserResponse createUser(CreateUserRequest request) {
         // TODO : 이 이메일이 진짜 이 사람의 이메일인지 체크
@@ -29,12 +31,11 @@ public class UserService {
                     .build();
         }
 
-        // TODO : Password를 그냥 저장하지 않고, passwordHash로 저장하도록 변경
         User user = User.builder()
                 .nickname(request.getNickname())
                 .email(request.getEmail())
                 .sex(request.getSex())
-                .passwordHash(request.getPassword()).build();
+                .passwordHash(passwordEncoder.encode(request.getPassword())).build();
 
         return new CreateUserResponse(userRepository.save(user).getNickname());
     }
