@@ -1,4 +1,4 @@
-package com.couplediary.Exception;
+package com.couplediary.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

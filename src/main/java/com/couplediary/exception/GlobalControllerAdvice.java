@@ -1,4 +1,4 @@
-package com.couplediary.Exception;
+package com.couplediary.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
