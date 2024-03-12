@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -23,8 +25,6 @@ public class UserService {
     public CreateUserResponse createUser(CreateUserRequest request) {
         // TODO : 이 이메일이 진짜 이 사람의 이메일인지 체크
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-
-            // TODO : 추후 예외처리 공통적으로 해야함 (ControllerAdvice)
             throw CustomException.builder()
                     .message("이미 존재하는 유저입니다.")
                     .status(HttpStatus.BAD_REQUEST)
@@ -35,13 +35,14 @@ public class UserService {
                 .nickname(request.getNickname())
                 .email(request.getEmail())
                 .sex(request.getSex())
-                .passwordHash(passwordEncoder.encode(request.getPassword())).build();
+                .passwordHash(passwordEncoder.encode(request.getPassword()))
+                .code(UUID.randomUUID())
+                .build();
 
         return new CreateUserResponse(userRepository.save(user).getNickname());
     }
 
     public GetUserResponse getUser(Long id) {
-        // TODO : 추후 예외처리 공통적으로 해야함 (ControllerAdvice)
         User user = userRepository.findById(id).orElseThrow(() ->
                 CustomException.builder()
                         .message("해당 회원이 존재하지 않습니다.")
