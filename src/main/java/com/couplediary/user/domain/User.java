@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -18,12 +20,15 @@ public class User {
     private String nickname;
     private Sex sex;
 
+    private UUID code;
+
     @Builder
-    public User(String email, String passwordHash, String nickname, Sex sex) {
+    public User(String email, String passwordHash, String nickname, Sex sex, UUID code) {
         this.email = email;
         this.passwordHash = passwordHash;
         this.nickname = nickname;
         this.sex = sex;
+        this.code = code;
     }
 
     public enum Sex {
