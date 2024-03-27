@@ -19,7 +19,6 @@ public class User {
     private String passwordHash;
     private String nickname;
     private Sex sex;
-
     private UUID code;
 
     @Builder
